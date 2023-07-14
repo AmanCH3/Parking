@@ -4,18 +4,85 @@ from PIL import Image,ImageTk,ImageDraw,ImageFont
 from tkinter import messagebox
 import datetime as dt
 import sqlite3
+ntwo=0
+nfour=0
+nother=0
 
 date=dt.datetime.now()
+
+def dell():
+    conn=sqlite3.connect("parking.db")
+    c=conn.cursor()
+
+    c.execute("DELETE from add_customer WHERE vehicle_no= ?",(veh_no_en.get(),))
+    print("Deleted Sucessfully")
+    veh_no_en.delete(0,END)
+    conn.commit()
+    conn.close()
+    receipt=Toplevel()
+    receipt.geometry("300x300")
+    receipt.title("Receipt Invoice")
+    
+
+
+
+def submit():
+    conn=sqlite3.connect('parking.db')
+    c=conn.cursor()
+    c.execute("INSERT INTO add_customer VALUES(:full_name,:vehicle_no,:phone_no,:time,:slot_no,:date,:vehicle_type)",{
+        "full_name":customer_entry.get(),
+        "vehicle_no":vehicle_no_en.get(),
+        "phone_no":phone_entry.get(),
+        "time":timeentry.get(),
+        "slot_no":slot_entry.get(),
+        "date":date_entry.get(),
+        "vehicle_type":valueinside.get()
+           })
+    conn.commit()
+    conn.close()
+    customer_entry.delete(0,END)
+    vehicle_no_en.delete(0,END)
+    phone_entry.delete(0,END)
+    slot_entry.delete(0,END)
+    if valueinside.get()=="Two Wheelers":
+        global ntwo
+        ntwo=ntwo+1
+    if valueinside.get()=="Four Wheelers":
+        global nfour
+        nfour=nfour+1
+    if valueinside.get()=="Others":
+        global nother
+        nother=nother+1
+  
+
+    
+    
+    
+def showcustomer():
+    conn=sqlite3.connect("parking.db")
+    c=conn.cursor()
+    c.execute("SELECT*,oid FROM add_customer")
+    records=c.fetchall()
+    print_record=""
+    for record in records:
+        print_record+=(record[0])+" \t "+str(record[1])+" \t "+str(record[2])+" \t "+str(record[3])+" \t "+str(record[4])+" \t "+str(record[5])+" \t "+str(record[6])+" \t "+str(record[7])+"\n"
+    query_label=Label(customerinframe,text=print_record,width=70,font=("poppins",20))
+    query_label.place(x=0,y=50)
+    conn.commit()
+    conn.close()
 
     
 
 
+
 def landpage():
-    # for dashboard frame and heading________________________________
+# for dashboard frame and heading________________________________
     land=Frame(dash,width=1200,bg="#E5E5E5")
     land.place(x=350,y=60,height=850)
     heading=Label(land,text="Dashboard",fg="black",bg="#E5E5E5",font=("poppins",40))
     heading.place(x=0,y=0)
+
+
     twowheelerlabel=Label(land,width=50,bg="#2A3473")
     twowheelerlabel.place(x=15,y=100,height=300)
     twowheeler_label1=Label(land,width=20,bg="#2A3473",text="Two Wheelers",font=("poppins",20),fg="white")
@@ -30,6 +97,13 @@ def landpage():
     otherlabel.place(x=815,y=100,height=300)
     other_label1=Label(land,width=20,bg="#2A3473",text="Other Vehicles",font=("poppins",20),fg="white")
     other_label1.place(x=835,y=100)
+
+    twowheeler_quant=Label(land,text=ntwo,font=("poppins",120),fg="white",bg="#2A3473")
+    twowheeler_quant.place(x=150,y=150)
+    fourwheeler_quant=Label(land,text=nfour,font=("poppins",120),fg="white",bg="#2A3473")
+    fourwheeler_quant.place(x=550,y=150)
+    other_quant=Label(land,text=nother,font=("poppins",120),fg="white",bg="#2A3473")
+    other_quant.place(x=950,y=150)
     
     # _____________________________________________________
 def parkingslot():
@@ -41,6 +115,7 @@ def parkingslot():
 
     vehicleNoLabel=Label(park,width=30,bg="#2A3473",text="Enter Vehicle Number:",fg="white",font=("poppins",20))
     vehicleNoLabel.place(x=120)
+    global veh_no_en
     veh_no_en=Entry(park,width=50,font=("poppins",20))
     veh_no_en.place(x=225,y=50,height=30)
 
@@ -55,7 +130,7 @@ def parkingslot():
     rate_en=Entry(park,width=50,font=("poppins",20))
     rate_en.place(x=225,y=250,height=30)
 
-    submitbutton=Button(park,width=30,text="Submit",font=("poppins",10))
+    submitbutton=Button(park,width=30,command=dell,text="Submit",font=("poppins",10))
     submitbutton.place(x=480,y=300)
 
 
@@ -117,7 +192,7 @@ def addcustomerfunc():
     question.config(width=30,font=("poppins",15))
     question.place(x=225,y=650,height=30)
 
-    addcustomer_button=Button(addcus,width=30,text="Add Customer",font=("poppins",10))
+    addcustomer_button=Button(addcus,width=30,text="Add Customer",command=submit,font=("poppins",10))
     addcustomer_button.place(x=730,y=650,height=30)
 
 
@@ -131,14 +206,16 @@ def addcustomerfunc():
     
 
 def receiphisfunc():
-    receipthis=Frame(dash,width=1200,bg="green")
+    receipthis=Frame(dash,width=1200,bg="#2A3473")
     receipthis.place(x=350,y=60,height=850)
     scrollbar=Scrollbar(receipthis,orient="vertical")
     scrollbar.place(x=1170,y=0)
 
 def customerinfo():
-    customerinframe=Frame(dash,width=1200,bg="yellow")
+    global customerinframe
+    customerinframe=Frame(dash,width=1200,bg="#2A3473")
     customerinframe.place(x=350,y=60,height=850)
+    showcustomer()
     
      
 
