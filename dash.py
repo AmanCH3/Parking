@@ -4,53 +4,280 @@ from PIL import Image,ImageTk,ImageDraw,ImageFont
 from tkinter import messagebox
 import datetime as dt
 import sqlite3
+
 ntwo=0
 nfour=0
 nother=0
 
+
 date=dt.datetime.now()
 
-def dell():
+def udt():
+    conn=sqlite3.connect("parking.db")
+    c=conn.cursor()
+    c.execute("""UPDATE add_customer SET 
+                full_name=:full,
+                vehicle_no=:veh,
+                phone_no=:phn,
+                slot_no=:sn
+                WHERE vehicle_no=:veh_param""",
+          {"full": entry11.get(),
+           "veh": entry22.get(),
+           "phn": entry33.get(),
+           "sn": entry44.get(),
+           "veh_param": search.get()
+           }
+          )
+
+    conn.commit()   
+    conn.close()
+    upp.destroy()
+
+def update():
+    global entry11
+    global entry22
+    global entry33
+    global entry44
+    global upp
+    upp=Tk()
+    upp.title("Update Page")
+    upp.geometry("500x500")
+    upp.config(bg="#2A3473")
     conn=sqlite3.connect("parking.db")
     c=conn.cursor()
 
-    c.execute("DELETE from add_customer WHERE vehicle_no= ?",(veh_no_en.get(),))
-    print("Deleted Sucessfully")
-    veh_no_en.delete(0,END)
-    conn.commit()
-    conn.close()
+    c.execute("SELECT*FROM add_customer WHERE vehicle_no=?",(search.get(),))
+    records=c.fetchall()
+
+    label=Label(upp,text='Full Name',bg="#2A3473",font=("poppins",10),fg="white")
+    label.place(x=0,y=10)
+    label1=Label(upp,text="Vehicle no",bg="#2A3473",font=("poppins",10),fg="white")
+    label1.place(x=0,y=40)
+    label2=Label(upp,text="Phone No",bg="#2A3473",font=("poppins",10),fg="white")
+    label2.place(x=0,y=80)
+    label3=Label(upp,text="Slot no",bg="#2A3473",font=("poppins",10),fg="white")
+    label3.place(x=0,y=120)
+
+    entry11=Entry(upp,width=40)
+    entry22=Entry(upp,width=40)
+    entry33=Entry(upp,width=40)
+    entry44=Entry(upp,width=40)
+    entry11.place(x=80,y=10)
+    entry22.place(x=80,y=40)
+    entry33.place(x=80,y=80)
+    entry44.place(x=80,y=120)
+    sv=Button(upp,text="Update",command=udt,width=21,font=("poppins"))
+    sv.place(x=80,y=150)
+    
+    for record in records:
+        entry11.insert(0,record[0])
+        entry22.insert(0,record[1])
+        entry33.insert(0,record[2])
+        entry44.insert(0,record[4])
+    
+    upp.mainloop()
+
+def deleterec():
+    try:
+        conn=sqlite3.connect("parking.db")
+        c=conn.cursor()
+
+        c.execute("DELETE from receipt WHERE oid= ?",(deleterecipten.get(),))
+        deleterecipten.delete(0,END)
+        conn.commit()
+        conn.close()
+    except conn.Error:
+        messagebox.showerror("ALert","Error Occured")
+        c.execute("rollback")
+
+def dell():
+    try:
+        connect=sqlite3.connect("parking.db")
+        cc=connect.cursor()
+        ab=cc.execute("SELECT time from add_customer WHERE vehicle_no= ?",(veh_no_en.get(),))
+        ex_t=ab.fetchone()
+        exit1=float(ex_t[0])
+        connect.commit()
+        connect.close()
+    except connect.Error:
+        messagebox.showerror("ALert","Error Occured")
+        cc.execute("rollback")
+
+    try:
+        connect1=sqlite3.connect("parking.db")
+        cc1=connect1.cursor()
+        abc=cc1.execute("SELECT full_name from add_customer WHERE vehicle_no= ?",(veh_no_en.get(),))
+        ab_c=abc.fetchone()
+        abc1=str(ab_c[0])
+        connect1.commit()
+        connect1.close()
+    except connect1.Error:
+        messagebox.showerror("ALert","Error Occured")
+        cc1.execute("rollback")
+
+    try:
+        connect11=sqlite3.connect("parking.db")
+        cc11=connect11.cursor()
+        abcd=cc11.execute("SELECT vehicle_no from add_customer WHERE vehicle_no= ?",(veh_no_en.get(),))
+        ab_d=abcd.fetchone()
+        abcd1=int(ab_d[0])
+        connect11.commit()
+        connect11.close()
+    except connect11.Error:
+        messagebox.showerror("ALert","Error Occured")
+        cc11.execute("rollback")
+
+    try:
+        connect111=sqlite3.connect("parking.db")
+        cc111=connect111.cursor()
+        abcde=cc111.execute("SELECT date from add_customer WHERE vehicle_no= ?",(veh_no_en.get(),))
+        ab_de=abcde.fetchone()
+        abcd11=str(ab_de[0])
+        connect111.commit()
+        connect111.close()
+    except connect111.Error:
+        messagebox.showerror("ALert","Error Occured")
+        cc111.execute("rollback")
+
+
+    try:
+        connect1112=sqlite3.connect("parking.db")
+        cc1112=connect1112.cursor()
+        abcdef=cc1112.execute("SELECT vehicle_type from add_customer WHERE vehicle_no= ?",(veh_no_en.get(),))
+        ab_def=abcdef.fetchone()
+        abcd112=ab_def[0]
+        connect1112.commit()
+        connect1112.close()
+    except connect1112.Error:
+        messagebox.showerror("ALert","Error Occured")
+        cc1112.execute("rollback")
+
+    try:
+        conn=sqlite3.connect("parking.db")
+        c=conn.cursor()
+        c.execute("DELETE from add_customer WHERE vehicle_no= ?",(veh_no_en.get(),))
+        print("Deleted Sucessfully")
+        veh_no_en.delete(0,END)
+        conn.commit()
+        conn.close()
+    except conn.Error:
+        messagebox.showerror("ALert","Error Occured")
+        c.execute("rollback")
+
+        
+
+    if abcd112=="Two Wheelers":
+        global ntwo
+        ntwo=ntwo-1
+    elif abcd112=="Four Wheelers":
+        global nfour
+        nfour=nfour-1
+    elif abcd112=="        Other":
+        global nother
+        nother=nother-1
     receipt=Toplevel()
+
     receipt.geometry("300x300")
     receipt.title("Receipt Invoice")
+    receipt.config(bg="pink")
+    rate=rate_en.get()
+    exx_time=exit_en.get()
+    print(type(exx_time))
+    ex_time=float(exit_en.get())-exit1
+    amount=int(rate)*ex_time
+    roundamount=round(amount,2)
+    rate_en.delete(0,END)
+
+    com_label=Label(receipt,text="Parking\n ORG",font=("poppins",12),bg="pink")
+    com_label.pack(side=TOP)
+
+    name_label=Label(receipt,text="Name      :",font=("poppins",12),bg="pink")
+    name_label.place(x=0,y=40)
+    fullname_label=Label(receipt,text=abc1,font=("poppins",12),bg="pink")
+    fullname_label.place(x=200,y=40)
+
+    vehic_label=Label(receipt,text="Vehicle No:",font=("poppins",12),bg="pink")
+    vehic_label.place(x=0,y=70)
+    vehicno_label=Label(receipt,text=abcd1,font=("poppins",12),bg="pink")
+    vehicno_label.place(x=200,y=70)
+
+    entry_label=Label(receipt,text="Enter Time:",font=("poppins",12),bg="pink")
+    entry_label.place(x=0,y=100)
+    entryy_label=Label(receipt,text=exit1,font=("poppins",12),bg="pink")
+    entryy_label.place(x=200,y=100)
+
+    exit_label=Label(receipt,text="Exit Time:",font=("poppins",12),bg="pink")
+    exit_label.place(x=0,y=130)
+    exitt_label=Label(receipt,text=exx_time,font=("poppins",12),bg="pink")
+    exitt_label.place(x=200,y=130)
+
+    rate_label=Label(receipt,text="Rate     :",font=("poppins",12),bg="pink")
+    rate_label.place(x=0,y=160)
+    ratee_label=Label(receipt,text=rate,font=("poppins",12),bg="pink")
+    ratee_label.place(x=200,y=160)
+
+    date_label=Label(receipt,text="Date     :",font=("poppins",12),bg="pink")
+    date_label.place(x=0,y=190)
+    dat_label=Label(receipt,text=abcd11,font=("poppins",12),bg="pink")
+    dat_label.place(x=200,y=190)
+
+
+    amountabel=Label(receipt,text="TOTAL  :",font=("poppins",15),bg="pink")
+    amountabel.place(x=0,y=240)
+    amountlabel=Label(receipt,text=roundamount,font=("poppins",12),bg="pink")
+    amountlabel.place(x=200,y=240)
     
+    try:
+        connt=sqlite3.connect('parking.db')
+        cy=connt.cursor()
+        cy.execute("INSERT INTO receipt VALUES(:date,:name,:vehicle_no,:total)",{
+            "date":abcd11,
+            "name":abc1,
+            "vehicle_no":abcd1,
+            "total":roundamount
+
+
+
+        })
+        connt.commit()
+        connt.close()
+    except connt.Error:
+        messagebox.showerror("ALert","Error Occured")
+        cy.execute("rollback")
+
 
 
 
 def submit():
-    conn=sqlite3.connect('parking.db')
-    c=conn.cursor()
-    c.execute("INSERT INTO add_customer VALUES(:full_name,:vehicle_no,:phone_no,:time,:slot_no,:date,:vehicle_type)",{
-        "full_name":customer_entry.get(),
-        "vehicle_no":vehicle_no_en.get(),
-        "phone_no":phone_entry.get(),
-        "time":timeentry.get(),
-        "slot_no":slot_entry.get(),
-        "date":date_entry.get(),
-        "vehicle_type":valueinside.get()
-           })
-    conn.commit()
-    conn.close()
+    try:
+        conn=sqlite3.connect('parking.db')
+        c=conn.cursor()
+        c.execute("INSERT INTO add_customer VALUES(:full_name,:vehicle_no,:phone_no,:time,:slot_no,:date,:vehicle_type)",{
+            "full_name":customer_entry.get(),
+            "vehicle_no":vehicle_no_en.get(),
+            "phone_no":phone_entry.get(),
+            "time":timeentry.get(),
+            "slot_no":slot_entry.get(),
+            "date":date_entry.get(),
+            "vehicle_type":valueinside.get()
+            })
+        conn.commit()
+        conn.close()
+    except conn.Error:
+        messagebox.showerror("ALert","Error Occured")
+        c.execute("rollback")
     customer_entry.delete(0,END)
     vehicle_no_en.delete(0,END)
     phone_entry.delete(0,END)
     slot_entry.delete(0,END)
+
     if valueinside.get()=="Two Wheelers":
         global ntwo
         ntwo=ntwo+1
     if valueinside.get()=="Four Wheelers":
         global nfour
         nfour=nfour+1
-    if valueinside.get()=="Others":
+    if valueinside.get()=="        Other":
         global nother
         nother=nother+1
   
@@ -59,17 +286,21 @@ def submit():
     
     
 def showcustomer():
-    conn=sqlite3.connect("parking.db")
-    c=conn.cursor()
-    c.execute("SELECT*,oid FROM add_customer")
-    records=c.fetchall()
-    print_record=""
-    for record in records:
-        print_record+=(record[0])+" \t "+str(record[1])+" \t "+str(record[2])+" \t "+str(record[3])+" \t "+str(record[4])+" \t "+str(record[5])+" \t "+str(record[6])+" \t "+str(record[7])+"\n"
-    query_label=Label(customerinframe,text=print_record,width=70,font=("poppins",20))
-    query_label.place(x=0,y=50)
-    conn.commit()
-    conn.close()
+    try:
+        conn=sqlite3.connect("parking.db")
+        c=conn.cursor()
+        c.execute("SELECT*,oid FROM add_customer")
+        records=c.fetchall()
+        print_record=""
+        for record in records:
+            print_record+=(record[0])+"\t \t"+str(record[1])+"\t \t"+str(record[2])+"\t \t"+str(record[3])+"\t \t"+str(record[4])+"\t \t"+str(record[5])+"\t \t"+str(record[6])+"\n"
+        query_label=Label(customerinframe,text=print_record,width=120,font=("poppins",11))
+        query_label.place(x=80,y=50)
+        conn.commit()
+        conn.close()
+    except conn.Error:
+        messagebox.showerror("ALert","Error Occured")
+        c.execute("rollback")
 
     
 
@@ -77,6 +308,8 @@ def showcustomer():
 
 def landpage():
 # for dashboard frame and heading________________________________
+
+
     land=Frame(dash,width=1200,bg="#E5E5E5")
     land.place(x=350,y=60,height=850)
     heading=Label(land,text="Dashboard",fg="black",bg="#E5E5E5",font=("poppins",40))
@@ -121,12 +354,14 @@ def parkingslot():
 
     exit=Label(park,width=30,bg="#2A3473",text="Enter Exit Time:",fg="white",font=("poppins",20))
     exit.place(x=80,y=100)
+    global exit_en
     exit_en=Entry(park,width=50,font=("poppins",20))
     exit_en.insert(END,exit_time)
     exit_en.place(x=225,y=150,height=30)
    
     rate_lb=Label(park,width=30,bg="#2A3473",text="Rate:",fg="white",font=("poppins",20))
     rate_lb.place(x=20,y=200)
+    global rate_en
     rate_en=Entry(park,width=50,font=("poppins",20))
     rate_en.place(x=225,y=250,height=30)
 
@@ -188,7 +423,7 @@ def addcustomerfunc():
     valueinside=StringVar(addcus)
     valueinside.set("Select An Option")
     global question
-    question=OptionMenu(addcus,valueinside,"Two Wheelers","Four Wheelers","Other")
+    question=OptionMenu(addcus,valueinside,"Two Wheelers","Four Wheelers","        Other")
     question.config(width=30,font=("poppins",15))
     question.place(x=225,y=650,height=30)
 
@@ -211,11 +446,42 @@ def receiphisfunc():
     scrollbar=Scrollbar(receipthis,orient="vertical")
     scrollbar.place(x=1170,y=0)
 
+    conn=sqlite3.connect("parking.db")
+    c=conn.cursor()
+    c.execute("SELECT*,oid FROM receipt")
+    records=c.fetchall()
+    print_record=""
+    for record in records:
+        print_record+=(record[0])+"\t\t"+str(record[1])+"\t\t"+str(record[2])+"\t\t"+str(record[3])+"\t\t"+str(record[4])+"\n"
+    query_label=Label(receipthis,text=print_record,font=("poppins",15))
+    query_label.place(x=150,y=50)
+    conn.commit()
+    conn.close()
+
+    fullnamelabel=Label(receipthis,text="Date                        Name                 VH No      Total Amt    R.No",font=("poppins",23),bg="#2A3473",fg="white")
+    fullnamelabel.place(x=150,y=0,height=45)
+
+    global deleterecipten
+    deleterecipten=Entry(receipthis,width=30,font=("poppins",20))
+    deleterecipten.insert(0,"Receipt No:")
+    deleterecipten.place(x=10,y=690)
+    deletereciptenbutton=Button(receipthis,width=15,command=deleterec,text="Delete Receipt",font=("poppins",10))
+    deletereciptenbutton.place(x=480,y=690,height=40)
+
+    global refreshbutton1
+    refreshbutton1=Button(receipthis,width=10,text="Refresh",command=receiphisfunc,font=("poppins",10))
+    refreshbutton1.place(x=1100,y=680,height=40)
+
 def customerinfo():
     global customerinframe
     customerinframe=Frame(dash,width=1200,bg="#2A3473")
     customerinframe.place(x=350,y=60,height=850)
     showcustomer()
+    fullnamelabel=Label(customerinframe,text="Name          VH No       Phn No      Enter Time  Slot no     Date            VH Type",font=("poppins",23),bg="#2A3473",fg="white")
+    fullnamelabel.place(x=80,y=0,height=45)
+    global refreshbutton11
+    refreshbutton11=Button(customerinframe,width=10,text="Refresh",command=customerinfo,font=("poppins",10))
+    refreshbutton11.place(x=1100,y=680,height=40)
     
      
 
@@ -254,7 +520,7 @@ topbar.place(x =350,y=0)
 search=Entry(topbar,width=35,fg="black",border=0,font=("poppins",12))
 search.insert(0,"Search with Vehicle No")
 search.place(x=50,y=13,height=35)
-searchbutton=Button(topbar,width=10,text="search",font=("poppins",12))
+searchbutton=Button(topbar,command=update,width=10,text="search",font=("poppins",12))
 searchbutton.place(x=370,y=13,height=35)
 pro = Button(topbar,text="Profile",fg="black",bg="#EEA842",bd=0,activebackground='white', activeforeground="black",
                       font=("bold",20))
