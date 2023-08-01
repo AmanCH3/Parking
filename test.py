@@ -1,0 +1,5 @@
+file=open("two.txt","r")
+a=file.readline()
+file.close()
+print(a)
+print(type(a))

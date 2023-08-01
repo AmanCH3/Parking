@@ -280,6 +280,10 @@ def submit():
     if valueinside.get()=="        Other":
         global nother
         nother=nother+1
+    newwin=Toplevel()
+    
+
+    newwin.mainloop()
   
 
     
