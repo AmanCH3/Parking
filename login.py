@@ -13,7 +13,9 @@ def login():
     us=records[0]
     data=list(us)
     user=data[0]
+    print(user)
     passw=data[1]
+    print(passw)
     
     if username.get()==user and passwordd.get()==passw :
         a.destroy()
@@ -37,9 +39,7 @@ a.geometry(f"{windowwidth}x{windowheight}+{x}+{y}")
 a.state("zoomed")
 
 frame=Frame(a, width=1000,height=999,bg="white").place(x = 900,y=1)
-# frame=Frame(a, width=500,height=509,bg="black").place(x = 100,y=1)
 
-# ===========function=========
 
 
 def toggle_password_visibility():
@@ -47,32 +47,7 @@ def toggle_password_visibility():
         passwordd.config(show="")
     else:
         passwordd.config(show="*")
-# def toggle_password_visibility():
-#     if passwordd.cget("show") == "*":
-#         passwordd.config(show="")
-#         show_password_button.config(text="Hide Password")
-#     else:
-#         passwordd.config(show="*")
-#         show_password_button.config(text="Show Password")
 
-# =========function=========
-# ==========image===========
-
-# ing= PhotoImage(file="three.png")
-# Label(a,image=ing,bg="#156669").place(x =-450, y =-120)
-# frame=Frame(a, width=0,height=0,bg="black").place(x = 100,y=100)
-# my=Image.open("circle.png")
-# my=my.resize((500,500))
-# img=ImageTk.PhotoImage(my)
-# label=Label(image=img,bg="white")
-# label.place(x=1,y=1)
-# my=Image.open("smart.png")
-# my=my.resize((5,5))
-# img=ImageTk.PhotoImage(my)
-# label=Label(image=img,bg="")
-# label.place(x=190,y=170)
-# framee=Frame(a,bg="white",width=800,height=1000)
-# framee.place(x=0,y=0)
 my=Image.open("l.png")
 my=my.resize((1550,830))
 img=ImageTk.PhotoImage(my)
@@ -82,21 +57,6 @@ label.place(x=-7,y=0)
 
 main_heading=Label(a,text="PARKING MANAGEMENT SYSTEM",fg="grey",font=("poppins",30,"bold"))
 main_heading.place(x=430,y=100)
-# ==============sign in=====
-# heading=Label(a,text="Sign In",fg="grey",font=("poppins",50,"bold"))
-# heading.place(x=680,y=200)
-# small_heading=Label(frame,text="Sign-in and Get Started",fg="grey",bg="white",font=("poppins", 15))
-# small_heading.place(x=1060,y=190)
-
-# =============sign==========
-
-# frame
-
-
-
-
-
-# ===========username cursor========
 def on_enter(e):
     username.delete(0,"end")
 def on_leave(e):
@@ -112,28 +72,11 @@ username.bind('<FocusIn>',on_enter)
 username.bind('<FocusOut>',on_leave)
 
 
-
-# =========line below the username=====
-
-# # Frame(frame,width=295,height=2,bg="black").place(x=1020,y=370)
-# # =====Update password===
-    
-
-    
-    
-
-
-
   
 # =======forgot password=====
 def forgot_password():
     global win
     win = Toplevel()
-    # windowwidth = 350
-    # windowheight = 350
-    # screenwidth = win.winfo_screenwidth()
-    # screenheight = win.winfo_screenheight()
-    # win.geometry(f'{windowwidth}*{windowheight}')
     win.geometry("350x400+450+150")
     win.title('Forgot password')
     win.configure(background='#f8f8f8')
@@ -206,22 +149,12 @@ passwordd.insert(0,"Password")
 passwordd.bind("<FocusIn>",on_enter)
 passwordd.bind("<FocusOut>",on_leave)
 
-# ========line below the password======
-# Frame(frame,width=225,height=2,bg="black").place(x=650,y=410)
-
 
 # ===========Button==============
 login_button = Button(a,activebackground="#CDF0EA",command=login,bg="#0079FF",text="login",fg="white",border=1,width= 20,font=("Comic Sans MS",10),padx=30,
                    pady=6,)
 login_button.place(x=667,y=520)
 
-
-# ============sign in Button======
-# login_button1 = Button(a,activebackground="#CDF0EA",bg="white",text="Sign in",fg="blue",border=2,font=("Comic Sans MS",13),padx=30,
-#                    pady=5,).place(x=1340,y=430)
-
-
-#====================show password checkout button ========
 show_password_var = BooleanVar()
 show_password_checkbutton = Checkbutton(a, text="Show Password", variable=show_password_var,command=toggle_password_visibility,fg="black",bg = "gray")
 show_password_checkbutton.place(x=783, y=475)

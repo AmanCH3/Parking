@@ -1,28 +1,25 @@
-import sqlite3
+# import sqlite3
 # conn=sqlite3.connect("parking.db")
 # c=conn.cursor()
-# c.execute(''' CREATE TABLE add_customer(
-#           full_name,
-#           vehicle_no,
-#           phone_no,
-#           time,
-#           slot_no,
+# c.execute(''' CREATE TABLE receipt(
 #           date,
-#           vehicle_type
-
+#           name,
+#           vehicle_no,
+#           total
+         
           
    
-#          ) ''')
+#        ) ''')
 # conn.commit()
-a="parking"
-b="parking123"
-conn=sqlite3.connect('parking.db')
-c=conn.cursor()
-c.execute("INSERT INTO admin_profile VALUES(:username,:passowrd)",{
-        "username":a,
-        "passowrd":b
-        })
-conn.commit()
-conn.close()
+# a="parking"
+# b="parking123"
+# conn=sqlite3.connect('parking.db')
+# c=conn.cursor()
+# c.execute("INSERT INTO admin_profile VALUES(:username,:password)",{
+#         "username":a,
+#         "password":b
+#         })
+# conn.commit()
+# conn.close()
 
 
